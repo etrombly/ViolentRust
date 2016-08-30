@@ -11,7 +11,7 @@ fn read_lines(path: &str) -> Result<Vec<String>, std::io::Error> {
     Ok(lines.lines().map(|s| s.to_owned()).collect())
 }
 
-fn ret_banner(socket_addr: SocketAddr) -> Result<[u8; 1024], ()> {
+fn ret_banner(socket_addr: SocketAddr) -> Result<String, ()> {
     if let Ok(mut stream) = TcpStream::connect(&socket_addr){
         let mut data = [0; 1024];
 
@@ -22,16 +22,16 @@ fn ret_banner(socket_addr: SocketAddr) -> Result<[u8; 1024], ()> {
 
         let mut handle = stream.take(1024);
         if let Ok(_) = handle.read(&mut data){
-            return Ok(data)
+            return Ok(String::from_utf8_lossy(&data).into_owned())
         }
     }
     Err(())
 }
 
 fn check_vulns(banner: &str, filename: &str) {
-    lines = read_lines(filename);
+    let lines = read_lines(filename).unwrap();
     for line in lines {
-        if banner.contains(line) {
+        if banner.contains(&line) {
             println!("[+] Server is vulnerable: {}", line);
         }
     }
@@ -49,8 +49,8 @@ fn main() {
         for port in &port_list {
             let socket_addr = SocketAddr::new(ip, *port);
             if let Ok(banner) = ret_banner(socket_addr){
-                println!("[+] {}:{}\n{}", ip, port, String::from_utf8_lossy(&banner));
-                check_vulns(banner, args[1]);
+                println!("[+] {}:{}\n{}", ip, port, banner);
+                check_vulns(&banner, &args[1]);
             } else {
                 println!("[-] {}:{} couldn't connect",ip,port);
             }
