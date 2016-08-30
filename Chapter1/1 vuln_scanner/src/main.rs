@@ -21,6 +21,9 @@ fn ret_banner(socket_addr: SocketAddr) -> Result<[u8; 1024], ()> {
     Err(())
 }
 
+fn check_vulns(banner: &str) {
+
+}
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
