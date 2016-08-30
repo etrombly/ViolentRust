@@ -13,7 +13,7 @@ fn read_lines(path: &str) -> Result<Vec<String>, std::io::Error> {
 
 fn main() {
     let lines = read_lines("passwords.txt").unwrap();
-    for line in lines{
+    for line in lines {
         let split: Vec<&str> = line.split(':').collect();
         if split.len() > 1 {
             println!("[*] Cracking Password For: {}", split[0]);
@@ -22,12 +22,12 @@ fn main() {
     }
 }
 
-fn test_pass (crypt_pass: &str) {
+fn test_pass(crypt_pass: &str) {
     let lines = read_lines("dictionary.txt").unwrap();
     for word in lines {
         if unix_crypt::verify(&word, crypt_pass) {
             println!("[+] Found Password: {}", word);
-            return
+            return;
         }
     }
     println!("[-] Password not found");
