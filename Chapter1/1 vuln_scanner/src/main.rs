@@ -1,8 +1,15 @@
 use std::env;
-use std::net::{SocketAddr, IpAddr, Ipv4Addr};
-use std::net::TcpStream;
+use std::net::{SocketAddr, IpAddr, Ipv4Addr, TcpStream};
+use std::fs::File;
 use std::io::Read;
 use std::io::Write;
+
+fn read_lines(path: &str) -> Result<Vec<String>, std::io::Error> {
+    let mut f = try!(File::open(path));
+    let mut lines = String::new();
+    try!(f.read_to_string(&mut lines));
+    Ok(lines.lines().map(|s| s.to_owned()).collect())
+}
 
 fn ret_banner(socket_addr: SocketAddr) -> Result<[u8; 1024], ()> {
     if let Ok(mut stream) = TcpStream::connect(&socket_addr){
@@ -21,9 +28,15 @@ fn ret_banner(socket_addr: SocketAddr) -> Result<[u8; 1024], ()> {
     Err(())
 }
 
-fn check_vulns(banner: &str) {
-
+fn check_vulns(banner: &str, filename: &str) {
+    lines = read_lines(filename);
+    for line in lines {
+        if banner.contains(line) {
+            println!("[+] Server is vulnerable: {}", line);
+        }
+    }
 }
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
@@ -37,6 +50,7 @@ fn main() {
             let socket_addr = SocketAddr::new(ip, *port);
             if let Ok(banner) = ret_banner(socket_addr){
                 println!("[+] {}:{}\n{}", ip, port, String::from_utf8_lossy(&banner));
+                check_vulns(banner, args[1]);
             } else {
                 println!("[-] {}:{} couldn't connect",ip,port);
             }
