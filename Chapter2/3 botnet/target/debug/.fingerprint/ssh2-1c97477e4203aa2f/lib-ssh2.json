@@ -1,0 +1,1 @@
+{"rustc":834563544524241077,"target":15856242535775418574,"profile":15288148974678605576,"local":{"variant":"Precalculated","fields":["0.2.13"]},"features":"None","deps":[["bitflags v0.1.1",5054426980355200049],["libc v0.2.15",443954799194232060],["libssh2-sys v0.1.39",7477577820544440905],["openssl-sys v0.7.17",1678960402878538933]],"rustflags":[]}
