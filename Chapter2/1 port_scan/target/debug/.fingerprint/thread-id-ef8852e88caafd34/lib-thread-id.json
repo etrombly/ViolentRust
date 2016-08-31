@@ -1,1 +1,0 @@
-{"rustc":4173339544965344871,"target":7461916023871887556,"profile":15288148974678605576,"local":{"variant":"Precalculated","fields":["2.0.0"]},"features":"None","deps":[["kernel32-sys v0.2.2",3099592471688734100],["libc v0.2.15",10819152530213733739]],"rustflags":[]}
